@@ -12,6 +12,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Update submodule
+      run: git submodule update --init --recursive
+
     - name: Remove all files in target path
       uses: appleboy/ssh-action@master
       with:
