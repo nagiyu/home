@@ -21,6 +21,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           rm -rf ${{ secrets.TARGET_PATH }}/nginx/*
+          rm -rf ${{ secrets.TARGET_PATH }}/blog/*
 
     - name: Upload artifact to server
       uses: appleboy/scp-action@master
@@ -42,6 +43,16 @@ jobs:
         script: |
           sudo cp ${{ secrets.TARGET_PATH }}/nginx/default /etc/nginx/sites-available/default
           sudo systemctl reload nginx
+
+    - name: Upload Blog artifact
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        source: blog/*
+        target: ${{ secrets.TARGET_PATH }}
 
     - name: Recreate Blog
       uses: appleboy/ssh-action@master
