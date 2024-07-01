@@ -54,7 +54,7 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        source: blog/*
+        source: blog/containers/*
         target: ${{ secrets.TARGET_PATH }}
 
     - name: Recreate Blog
@@ -65,6 +65,6 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          cd ${{ secrets.TARGET_PATH }}/blog
-          echo '${{ secrets.ADS }}' > ads.txt
+          cd ${{ secrets.TARGET_PATH }}/blog/containers
+          echo '${{ secrets.ADS }}' > wordpress/ads.txt
           sudo docker compose up -d
