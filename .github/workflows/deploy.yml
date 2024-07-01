@@ -2,8 +2,8 @@ name: deploy
 
 on:
   push:
-    branches:
-      - master
+    # branches:
+    #   - master
 
 jobs:
   build:
@@ -24,7 +24,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           rm -rf ${{ secrets.TARGET_PATH }}/nginx/*
-          rm -rf ${{ secrets.TARGET_PATH }}/blog/*
+          rm -rf ${{ secrets.TARGET_PATH }}/blog/containers/*
 
     - name: Upload artifact to server
       uses: appleboy/scp-action@master
