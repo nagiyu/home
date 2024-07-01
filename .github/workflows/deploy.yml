@@ -24,7 +24,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           rm -rf ${{ secrets.TARGET_PATH }}/nginx/*
-          rm -rf ${{ secrets.TARGET_PATH }}/blog/*
+          rm -rf ${{ secrets.TARGET_PATH }}/blog/containers/wordpress/*
 
     - name: Upload artifact to server
       uses: appleboy/scp-action@master
