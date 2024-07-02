@@ -24,8 +24,8 @@ server {
 
 	# SSL configuration
 	#
-	# listen 443 ssl default_server;
-	# listen [::]:443 ssl default_server;
+	listen 443 ssl default_server;
+	listen [::]:443 ssl default_server;
 	#
 	# Note: You should disable gzip for SSL traffic.
 	# See: https://bugs.debian.org/773332
@@ -44,6 +44,15 @@ server {
 	index index.html index.htm index.nginx-debian.html;
 
 	server_name _;
+
+	ssl_protocols TLSv1.2 TLSv1.3;
+	ssl_ciphers HIGH:!MEDIUM:!LOW:!aNULL:!NULL:!SHA;
+	ssl_prefer_server_ciphers on;
+	ssl_session_cache shared:SSL:10m;
+	ssl_session_tickets off;
+
+	ssl_certificate     /etc/letsencrypt/live/nagiyu.com/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/nagiyu.com/privkey.pem;
 
 	location / {
 		# First attempt to serve request as file, then
