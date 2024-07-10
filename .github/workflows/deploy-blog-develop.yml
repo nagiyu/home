@@ -48,6 +48,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           cd ${{ secrets.TARGET_PATH }}/develop/blog/containers
-          sed -i '"9000:80"/"9001:80"' docker-compose.yml
+          sed -i 's/PROJECT_NAME=blog/PROJECT_NAME=develop_blog/g' .env
+          sed -i 's/"9000:80"/"9001:80"/g' docker-compose.yml
           sudo docker compose build --no-cache
           sudo docker compose up -d
