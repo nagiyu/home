@@ -1,0 +1,46 @@
+name: deploy-home-develop
+
+on:
+  push:
+    # branches:
+    #   - develop
+    paths:
+      - 'nginx/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    # - name: Remove all files in target path
+    #   uses: appleboy/ssh-action@master
+    #   with:
+    #     host: ${{ secrets.SSH_HOST }}
+    #     username: ${{ secrets.SSH_USERNAME }}
+    #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+    #     port: ${{ secrets.SSH_PORT }}
+    #     script: |
+    #       rm -rf ${{ secrets.TARGET_PATH }}/develop/nginx/*
+
+    - name: Upload artifact to server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        source: nginx/*
+        target: ${{ secrets.TARGET_PATH }}/develop
+
+    - name: Replace nginx configuration and Reload nginx
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          sudo cp ${{ secrets.TARGET_PATH }}/develop/nginx/default /etc/nginx/sites-available/default
+          sudo systemctl reload nginx
