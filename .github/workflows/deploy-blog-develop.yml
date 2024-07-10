@@ -17,18 +17,18 @@ jobs:
     - name: Update submodule
       run: git submodule update --init --recursive
 
-    # - name: Remove all files in target path
-    #   uses: appleboy/ssh-action@master
-    #   with:
-    #     host: ${{ secrets.SSH_HOST }}
-    #     username: ${{ secrets.SSH_USERNAME }}
-    #     key: ${{ secrets.SSH_PRIVATE_KEY }}
-    #     port: ${{ secrets.SSH_PORT }}
-    #     script: |
-    #       rm -rf ${{ secrets.TARGET_PATH }}/tmp
-    #       cd ${{ secrets.TARGET_PATH }}/develop/blog/containers
-    #       sudo docker compose down
-    #       rm -rf *
+    - name: Remove all files in target path
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          rm -rf ${{ secrets.TARGET_PATH }}/tmp
+          cd ${{ secrets.TARGET_PATH }}/develop/blog/containers
+          sudo docker compose down
+          rm -rf *
 
     - name: Upload artifact to server
       uses: appleboy/scp-action@master
