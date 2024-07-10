@@ -1,11 +1,11 @@
-name: deploy-home-develop
+name: deploy-blog-develop
 
 on:
   push:
     branches:
       - develop
     paths:
-      - 'nginx/**'
+      - blog
 
 jobs:
   build:
@@ -14,6 +14,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Update submodule
+      run: git submodule update --init --recursive
+
     - name: Remove all files in target path
       uses: appleboy/ssh-action@master
       with:
@@ -21,7 +24,9 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        script: rm -rf ${{ secrets.TARGET_PATH }}/develop/nginx
+        script: |
+          cd ${{ secrets.TARGET_PATH }}/develop/blog/containers
+          sudo docker compose down
 
     - name: Upload artifact to server
       uses: appleboy/scp-action@master
@@ -30,10 +35,10 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        source: nginx/*
+        source: blog/containers/*
         target: ${{ secrets.TARGET_PATH }}/develop
 
-    - name: Replace nginx configuration and Reload nginx
+    - name: Recreate Blog
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -41,5 +46,8 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          sudo cp ${{ secrets.TARGET_PATH }}/develop/nginx/default /etc/nginx/sites-available/default
-          sudo systemctl reload nginx
+          cd ${{ secrets.TARGET_PATH }}/develop/blog/containers
+          sed -i 's/PROJECT_NAME=blog/PROJECT_NAME=develop_blog/g' .env
+          sed -i 's/"9000:80"/"9001:80"/g' docker-compose.yml
+          sudo docker compose build --no-cache
+          sudo docker compose -p develop_blog up -d
