@@ -25,6 +25,7 @@ jobs:
     #     key: ${{ secrets.SSH_PRIVATE_KEY }}
     #     port: ${{ secrets.SSH_PORT }}
     #     script: |
+    #       rm -rf ${{ secrets.TARGET_PATH }}/tmp
     #       cd ${{ secrets.TARGET_PATH }}/develop/blog/containers
     #       sudo docker compose down
     #       rm -rf *
@@ -36,8 +37,8 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        source: develop/blog/containers/*
-        target: ${{ secrets.TARGET_PATH }}
+        source: blog/containers/*
+        target: ${{ secrets.TARGET_PATH }}/tmp
 
     - name: Recreate Blog
       uses: appleboy/ssh-action@master
@@ -47,6 +48,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
+          cp -r ${{ secrets.TARGET_PATH }}/tmp/* ${{ secrets.TARGET_PATH }}/develop/blog/containers
           cd ${{ secrets.TARGET_PATH }}/develop/blog/containers
           sudo docker compose build --no-cache
           sudo docker compose up -d
