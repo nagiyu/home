@@ -27,7 +27,6 @@ jobs:
         script: |
           cd ${{ secrets.TARGET_PATH }}/develop/blog/containers
           sudo docker compose down
-          rm -rf *
 
     - name: Upload artifact to server
       uses: appleboy/scp-action@master
