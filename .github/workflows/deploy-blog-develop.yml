@@ -36,7 +36,7 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        source: blog/containers/*
+        source: develop/blog/containers/*
         target: ${{ secrets.TARGET_PATH }}
 
     - name: Recreate Blog
