@@ -1,12 +1,13 @@
-name: deploy-home-develop
+name: deploy-nginx
 
 on:
   push:
     branches:
+      - master
       - develop
     paths:
       - 'nginx/**'
-      - '.github/workflows/deploy-home-develop.yml'
+      - '.github/workflows/deploy-nginx.yml'
 
 jobs:
   build:
@@ -22,7 +23,7 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        script: rm -rf ${{ secrets.TARGET_PATH }}/develop/nginx
+        script: rm -rf ${{ secrets.TARGET_PATH }}/nginx
 
     - name: Upload artifact to server
       uses: appleboy/scp-action@master
@@ -32,7 +33,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
         source: nginx/*
-        target: ${{ secrets.TARGET_PATH }}/develop
+        target: ${{ secrets.TARGET_PATH }}
 
     - name: Replace nginx configuration and Reload nginx
       uses: appleboy/ssh-action@master
@@ -42,5 +43,5 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          sudo cp ${{ secrets.TARGET_PATH }}/develop/nginx/default /etc/nginx/sites-available/default
+          sudo cp ${{ secrets.TARGET_PATH }}/nginx/default /etc/nginx/sites-available/default
           sudo systemctl reload nginx
