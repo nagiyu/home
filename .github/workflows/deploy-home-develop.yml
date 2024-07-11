@@ -6,6 +6,7 @@ on:
       - develop
     paths:
       - 'nginx/**'
+      - '.github/workflows/deploy-home-develop.yml'
 
 jobs:
   build:
