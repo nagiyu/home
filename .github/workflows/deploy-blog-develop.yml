@@ -6,6 +6,7 @@ on:
       - develop
     paths:
       - blog
+      - '.github/workflows/deploy-blog-develop.yml'
 
 jobs:
   build:
