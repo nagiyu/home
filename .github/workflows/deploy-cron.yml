@@ -1,0 +1,49 @@
+name: deploy-cron
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+    paths:
+      - 'cron/**'
+      - '.github/workflows/deploy-cron.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Remove all files in target path
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          sudo rm /etc/cron.d/*
+          rm -rf ${{ secrets.TARGET_PATH }}/cron
+
+    - name: Upload artifact to server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        source: cron/*
+        target: ${{ secrets.TARGET_PATH }}
+
+    - name: Replace cron.d and Restart cron
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          sudo cp ${{ secrets.TARGET_PATH }}/cron/cron.d/* /etc/cron.d/
+          sudo systemctl restart cron
