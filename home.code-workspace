@@ -16,6 +16,7 @@
             "eamodio.gitlens",
             "oderwat.indent-rainbow",
             "github.vscode-pull-request-github",
+            "humao.rest-client",
         ]
     },
     "settings": {
