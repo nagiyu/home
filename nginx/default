@@ -119,9 +119,12 @@ server {
 
 server {
     listen 80;
-    server_name sub.nagiyu.com;
+    server_name dev-secret.nagiyu.com;
 
 	location / {
+		allow 127.0.0.1;
+		# deny all;
+
 		proxy_pass http://localhost:9003;
 		proxy_set_header Host $host;
 		proxy_set_header X-Real-IP $remote_addr;
