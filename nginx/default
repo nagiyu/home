@@ -122,7 +122,6 @@ server {
 	server_name dev-secret.nagiyu.com;
 
 	location / {
-		allow 127.0.0.1;
 		deny all;
 
 		proxy_pass http://localhost:9004;
