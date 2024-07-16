@@ -17,6 +17,8 @@
             "oderwat.indent-rainbow",
             "github.vscode-pull-request-github",
             "humao.rest-client",
+            "wmaurer.change-case",
+            "adpyke.vscode-sql-formatter",
         ]
     },
     "settings": {
