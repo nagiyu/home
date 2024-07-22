@@ -4,3 +4,6 @@
 [submodule "secret"]
 	path = secret
 	url = https://github.com/nagiyu/secret.git
+[submodule "finance"]
+	path = finance
+	url = https://github.com/nagiyu/finance.git
