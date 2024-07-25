@@ -191,10 +191,10 @@ server {
 	server_name dev-temp-finance.nagiyu.com;
 
 	location / {
-		deny all;
 		# allow x.x.x.x;
+		deny all;
 
-		proxy_pass http://localhost:9010;
+		proxy_pass http://localhost:9011;
 		proxy_http_version 1.1;
 		proxy_set_header Upgrade $http_upgrade;
 		proxy_set_header Connection "upgrade";
