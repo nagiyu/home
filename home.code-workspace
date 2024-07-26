@@ -8,6 +8,9 @@
         },
         {
             "path": "./secret"
+        },
+        {
+            "path": "./finance"
         }
     ],
     "extensions": {
