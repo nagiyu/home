@@ -1,0 +1,73 @@
+name: deploy-finance-develop
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - finance
+      - '.github/workflows/deploy-finance-develop.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Update submodule
+      run: git submodule update --init --recursive
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Publish with dotnet
+      run: dotnet publish --configuration Release finance/StockPriceViewer/StockPriceViewer.csproj
+
+    - name: Copy files
+      run: cp -r finance/StockPriceViewer/bin/Release/net8.0/publish finance/containers/stock_price_viewer/bin
+
+    - name: Remove all files in target path
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          cd ${{ secrets.TARGET_PATH }}/develop/finance/containers
+          sudo docker compose -f docker-compose-scraper.yml -p develop_finance down
+          sudo docker compose -f docker-compose.yml -p develop_finance down
+          rm -Rf *
+
+    - name: Upload artifact to server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        source: finance/containers/*
+        target: ${{ secrets.TARGET_PATH }}/develop
+
+    - name: Recreate Finance
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          cd ${{ secrets.TARGET_PATH }}/develop/finance/containers
+          sed -i 's/PROJECT_NAME=finance/PROJECT_NAME=develop_finance/g' .env
+          sed -i 's/9006:80/9009:80/g' docker-compose.yml
+          sed -i 's/9008:8080/9011:8080/g' docker-compose.yml
+          sed -i 's/9007:7900/9010:7900/g' docker-compose-scraper.yml
+          sed -i 's/finance_network/develop_finance_network/g' docker-compose.yml
+          sed -i 's/finance_network/develop_finance_network/g' docker-compose-scraper.yml
+          sudo docker compose -f docker-compose.yml build --no-cache
+          sudo docker compose -f docker-compose-scraper.yml build --no-cache
+          sudo docker compose -f docker-compose.yml -p develop_finance up -d
+          sudo docker compose -f docker-compose-scraper.yml -p develop_finance up -d
