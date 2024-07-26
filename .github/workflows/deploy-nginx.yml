@@ -2,9 +2,9 @@ name: deploy-nginx
 
 on:
   push:
-    # branches:
-    #   - master
-    #   - develop
+    branches:
+      - master
+      - develop
     paths:
       - 'nginx/**'
       - '.github/workflows/deploy-nginx.yml'
