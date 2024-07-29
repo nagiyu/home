@@ -43,5 +43,6 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          sudo cp ${{ secrets.TARGET_PATH }}/nginx/default /etc/nginx/sites-available/default
-          sudo systemctl reload nginx
+          sudo cp ${{ secrets.TARGET_PATH }}/nginx/* /etc/nginx/sites-available/
+          sudo sed -i 's/# allow x.x.x.x;/allow ${{ secrets.ACCEPT_IP_ADDRESS }};/g' /etc/nginx/sites-available/*
+          sudo systemctl restart nginx
