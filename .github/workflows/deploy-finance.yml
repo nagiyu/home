@@ -39,7 +39,9 @@ jobs:
         script: |
           cd ${{ secrets.TARGET_PATH }}/finance/containers
           sudo docker compose -f docker-compose-scraper.yml -p finance down
+          sleep 30
           sudo docker compose -f docker-compose.yml -p finance down
+          sleep 30
           rm -Rf *
 
     - name: Upload artifact to server
