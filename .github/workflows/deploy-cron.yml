@@ -2,9 +2,9 @@ name: deploy-cron
 
 on:
   push:
-    branches:
-      - master
-      - develop
+    # branches:
+    #   - master
+    #   - develop
     paths:
       - 'cron/**'
       - '.github/workflows/deploy-cron.yml'
