@@ -2,8 +2,8 @@ name: deploy-finance
 
 on:
   push:
-    branches:
-      - master
+    # branches:
+    #   - master
     paths:
       - finance
       - '.github/workflows/deploy-finance.yml'
@@ -39,9 +39,7 @@ jobs:
         script: |
           cd ${{ secrets.TARGET_PATH }}/finance/containers
           sudo docker compose -f docker-compose-scraper.yml -p finance down
-          sleep 30
           sudo docker compose -f docker-compose.yml -p finance down
-          sleep 30
           rm -Rf *
 
     - name: Upload artifact to server
