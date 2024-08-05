@@ -38,8 +38,9 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           cd ${{ secrets.TARGET_PATH }}/finance/containers
-          sudo docker compose -f docker-compose-scraper.yml -p finance down
-          sudo docker compose -f docker-compose.yml -p finance down
+          docker compose -f docker-compose-scraper.yml -p finance down
+          docker compose -f docker-compose.yml -p finance down
+          docker volume prune -f && docker image prune -f && docker builder prune -f
           rm -Rf *
 
     - name: Upload artifact to server
@@ -62,7 +63,7 @@ jobs:
         script: |
           cd ${{ secrets.TARGET_PATH }}/finance/containers
           sed -i 's/PGADMIN_DEFAULT_PASSWORD=Password123!/PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }}/g' docker-compose.yml
-          sudo docker compose -f docker-compose.yml build --no-cache
-          sudo docker compose -f docker-compose-scraper.yml build --no-cache
-          sudo docker compose -f docker-compose.yml -p finance up -d
-          sudo docker compose -f docker-compose-scraper.yml -p finance up -d
+          docker compose -f docker-compose.yml build --no-cache
+          docker compose -f docker-compose-scraper.yml build --no-cache
+          docker compose -f docker-compose.yml -p finance up -d
+          docker compose -f docker-compose-scraper.yml -p finance up -d

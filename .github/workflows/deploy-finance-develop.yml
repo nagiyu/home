@@ -38,8 +38,9 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           cd ${{ secrets.TARGET_PATH }}/develop/finance/containers
-          sudo docker compose -f docker-compose-scraper.yml -p develop_finance down
-          sudo docker compose -f docker-compose.yml -p develop_finance down
+          docker compose -f docker-compose-scraper.yml -p develop_finance down
+          docker compose -f docker-compose.yml -p develop_finance down
+          docker volume prune -f && docker image prune -f && docker builder prune -f
           rm -Rf *
 
     - name: Upload artifact to server
@@ -67,7 +68,7 @@ jobs:
           sed -i 's/9007:7900/9010:7900/g' docker-compose-scraper.yml
           sed -i 's/finance_network/develop_finance_network/g' docker-compose.yml
           sed -i 's/finance_network/develop_finance_network/g' docker-compose-scraper.yml
-          sudo docker compose -f docker-compose.yml build --no-cache
-          sudo docker compose -f docker-compose-scraper.yml build --no-cache
-          sudo docker compose -f docker-compose.yml -p develop_finance up -d
-          sudo docker compose -f docker-compose-scraper.yml -p develop_finance up -d
+          docker compose -f docker-compose.yml build --no-cache
+          docker compose -f docker-compose-scraper.yml build --no-cache
+          docker compose -f docker-compose.yml -p develop_finance up -d
+          docker compose -f docker-compose-scraper.yml -p develop_finance up -d
