@@ -22,6 +22,7 @@
             "humao.rest-client",
             "wmaurer.change-case",
             "adpyke.vscode-sql-formatter",
+            "ms-python.python",
         ]
     },
     "settings": {
