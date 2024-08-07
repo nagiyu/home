@@ -19,7 +19,7 @@ server {
 
 server {
 	listen 80;
-	server_name finance.nagiyu.com;
+	server_name finance-vnc.nagiyu.com;
 
 	location / {
 		# allow x.x.x.x;
@@ -38,7 +38,7 @@ server {
 
 server {
 	listen 80;
-	server_name finance-scraper.nagiyu.com;
+	server_name finance.nagiyu.com;
 
 	location / {
 		# allow x.x.x.x;
@@ -76,7 +76,7 @@ server {
 
 server {
 	listen 80;
-	server_name dev-finance.nagiyu.com;
+	server_name dev-finance-vnc.nagiyu.com;
 
 	location / {
 		# allow x.x.x.x;
@@ -95,7 +95,7 @@ server {
 
 server {
 	listen 80;
-	server_name dev-finance-scraper.nagiyu.com;
+	server_name dev-finance.nagiyu.com;
 
 	location / {
 		# allow x.x.x.x;
