@@ -41,7 +41,7 @@ jobs:
           docker compose -f docker-compose-scraper.yml -p finance down
           docker compose -f docker-compose.yml -p finance down
           docker volume prune -f && docker image prune -f && docker builder prune -f
-          rm -Rf *
+          sudo rm -Rf *
 
     - name: Upload artifact to server
       uses: appleboy/scp-action@master
